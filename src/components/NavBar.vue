@@ -1,5 +1,3 @@
-<!-- src/components/NavBar.vue -->
-
 <template>
   <nav>
     <div class="nav-container">
@@ -49,7 +47,7 @@ nav {
 }
 
 .left-side img {
-  margin-right: 15px; /* Space between logo and links */
+  margin-right: 15px;
 }
 
 .menu {
@@ -61,8 +59,9 @@ nav {
 }
 
 .left-menu {
+  margin-left: 25px;
   display: flex;
-  gap: 10px;
+  gap: 30px;
 }
 
 .menu li {

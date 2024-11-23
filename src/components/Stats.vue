@@ -10,8 +10,6 @@
       </div>
     </div>
     
-
-    <!-- Fixed Stats Grid in one line -->
     <div class="stats-grid" v-if="stats">
       <div
         class="stat-item"
@@ -100,7 +98,7 @@ export default {
         this.inputData = '';
       } catch (error) {
         console.error('Error fetching data:', error);
-        this.user = null; // Handle error by clearing user data
+        this.user = null;
       }
     },
 
@@ -134,6 +132,11 @@ export default {
 
 <style scoped>
 
+#app{
+  width: 100%;
+  height: 100%
+}
+
 .content {
   position: absolute;
   width: 300px;
@@ -148,7 +151,7 @@ export default {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  width: 300px; /* Optional: limit width */
+  width: 300px;
 }
 
 input {
@@ -238,7 +241,6 @@ margin: -100px 0 0 -150px;
   flex: 1; 
   min-width: 0;
   min-height: 100px;
-  height: 100%;
 }
 
 .stat-key {
