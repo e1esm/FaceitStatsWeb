@@ -2,8 +2,16 @@
   <div id="app">
     <NavBar />
 
+    <div class="user-info" v-if="user">
+      <img :src="user.avatar" alt="User Avatar" class="user-avatar"/>
+      <div class="user-details">
+        <h2><b>{{ user.nickname }}</b></h2>
+        <p>CS2 Skill Level: {{ user.cs2SkillLevel }}</p>
+      </div>
+    </div>
+
     <div class="content">
-      <div class="input-container">
+      <div class="input-container" v-if="!user">
         <input v-model="inputData" type="text" placeholder="Enter nickname" />
         <button @click="submitData">Get stats</button>
       </div>
@@ -11,8 +19,42 @@
   </div>
 </template>
 
+
 <script>
+import axios from 'axios';
 import NavBar from '@/components/NavBar.vue';
+
+
+class User {
+  constructor({ nickname, country, avatar, player_id, games }) {
+    this.nickname = nickname;
+    this.country = country;
+    this.avatar = avatar;
+    this.playerId = player_id;
+    this.games = games;
+
+    const cs2Game = games.find((game) => game.name === 'cs2');
+    this.cs2SkillLevel = cs2Game ? cs2Game.skill_level : 'Not available';
+  }
+}
+
+class PlayerStats {
+  constructor(data) {
+    this.kdRate = data.kd_rate;
+    this.krRate = data.kr_rate;
+    this.quadroKills = data.quadro_kills;
+    this.trippleKills = data.tripple_kills;
+    this.doubleKills = data.double_kills;
+    this.mvps = data.mvps;
+    this.deaths = data.deaths;
+    this.kills = data.kills;
+    this.assists = data.assists;
+    this.headshotPercentage = data.headshot_percentage;
+    this.hltvRating = data.hltv_rating;
+    this.adr = data.adr;
+    this.aces = data.aces;
+  }
+}
 
 export default {
   name: "Stats",
@@ -21,15 +63,49 @@ export default {
   },
   data() {
     return {
-      inputData: '',
+      inputData: '', // Input for the nickname
+      user: null, // Holds the mapped User instance
+      stats: null,
     };
   },
   methods: {
-    submitData() {
-      console.log('Data submitted:', this.inputData);
-      this.inputData = '';
-    }
-  }
+    async submitData() {
+        await this.getUserBasicInfo();
+        await this.getAverageData();
+    },
+    clearResponse() {
+      this.user = null; // Clear user data
+    },
+
+    async getUserBasicInfo(){
+      try {
+        const nickname = this.inputData || '';
+        const response = await axios.get(`http://localhost:8080/api/users/${nickname}`);
+
+        this.user = new User(response.data);
+        this.inputData = '';
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        this.user = null; // Handle error by clearing user data
+      }
+    },
+
+    async getAverageData() {
+      try{
+        const response = await axios.get(`http://localhost:8080/api/stats/average/${this.user.playerId}?all_matches=false&hltv_rating=true`);
+        this.stats = new PlayerStats(response.data); 
+
+      }catch(error){
+        console.error('Error fetching data:', error);
+        this.stats = null;
+      }
+    },
+  },
+  beforeRouteLeave(to, from, next) {
+    // Clear the user data when leaving the route
+    this.clearResponse();
+    next(); // Continue navigation
+  },
 };
 </script>
 
@@ -82,4 +158,32 @@ button {
 button:hover {
   background-color: #ff7800;
 }
+
+.user-info {
+position: absolute;
+width: 300px;
+z-index: 15;
+top: 200px;
+left: 50%;
+margin: -100px 0 0 -150px;
+}
+
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.user-details h2 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+.user-details p {
+  margin: 0;
+  font-size: 1em;
+  color: #555;
+}
+
 </style>
