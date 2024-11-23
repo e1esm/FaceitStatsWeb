@@ -86,6 +86,7 @@ nav {
 
 .right-menu li {
   list-style: none;
+  width: 100px;
   background-color: #ff5b00;
   border-radius: 5px;
 }

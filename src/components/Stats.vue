@@ -33,40 +33,9 @@
 
 
 <script>
-import axios from 'axios';
 import NavBar from '@/components/NavBar.vue';
-
-
-class User {
-  constructor({ nickname, country, avatar, player_id, games }) {
-    this.nickname = nickname;
-    this.country = country;
-    this.avatar = avatar;
-    this.playerId = player_id;
-    this.games = games;
-
-    const cs2Game = games.find((game) => game.name === 'cs2');
-    this.cs2SkillLevel = cs2Game ? cs2Game.skill_level : 'Not available';
-  }
-}
-
-class PlayerStats {
-  constructor(data) {
-    this.kdRate = data.kd_rate;
-    this.krRate = data.kr_rate;
-    this.quadroKills = data.quadro_kills;
-    this.trippleKills = data.tripple_kills;
-    this.doubleKills = data.double_kills;
-    this.mvps = data.mvps;
-    this.deaths = data.deaths;
-    this.kills = data.kills;
-    this.assists = data.assists;
-    this.headshotPercentage = data.headshot_percentage;
-    this.hltvRating = data.hltv_rating;
-    this.adr = data.adr;
-    this.aces = data.aces;
-  }
-}
+import * as UserService from '@/services/user';
+import * as StatsService from '@/services/stats';
 
 export default {
   name: "Stats",
@@ -75,8 +44,8 @@ export default {
   },
   data() {
     return {
-      inputData: '', // Input for the nickname
-      user: null, // Holds the mapped User instance
+      inputData: '', 
+      user: null,
       stats: null,
     };
   },
@@ -86,30 +55,31 @@ export default {
         await this.getAverageData();
     },
     clearResponse() {
-      this.user = null; // Clear user data
+      this.user = null;
+      this.stats = null;
+      this.inputData = '';
     },
 
     async getUserBasicInfo(){
       try {
         const nickname = this.inputData || '';
-        const response = await axios.get(`http://localhost:8080/api/users/${nickname}`);
+        this.user = await UserService.getUser(nickname);
 
-        this.user = new User(response.data);
         this.inputData = '';
       } catch (error) {
         console.error('Error fetching data:', error);
         this.user = null;
+        this.inputData = '';
       }
     },
 
     async getAverageData() {
       try{
-        const response = await axios.get(`http://localhost:8080/api/stats/average/${this.user.playerId}?all_matches=false&hltv_rating=true`);
-        this.stats = new PlayerStats(response.data); 
-
+        this.stats = await StatsService.getAverageStatsOf(this.user.playerId);
       }catch(error){
         console.error('Error fetching data:', error);
         this.stats = null;
+        this.inputData = '';
       }
     },
     formatKey(key) {

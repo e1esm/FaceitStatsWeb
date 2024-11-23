@@ -3,22 +3,40 @@
     <NavBar />
   <div class="container">
     <div class="half">
-      <input v-model="input1" placeholder="Enter first user to compare" />
-      <button @click="handleClick(1)">Submit</button>
+      <input v-model="firstInput" placeholder="Enter first user to compare" v-if="!firstPlayer"/>
+      <button @click="handleComparisonButton(1)" v-if="!firstPlayer">Submit</button>
+
+      <div class="user-info" v-if="firstPlayer">
+      <img :src="firstPlayer.avatar" alt="User Avatar" class="user-avatar" />
+      <div class="user-details">
+        <h2><b>{{ firstPlayer.nickname }}</b></h2>
+        <p>CS2 Skill Level: {{ firstPlayer.cs2SkillLevel }}</p>
+      </div>
+    </div>
     </div>
 
-        <div class="divider"></div>
+    <div class="divider"></div>
 
     <div class="half">
-      <input v-model="input2" placeholder="Enter second user to compare" />
-      <button @click="handleClick(2)">Submit</button>
+      <input v-model="secondInput" placeholder="Enter second user to compare" v-if="!secondPlayer"/>
+      <button @click="handleComparisonButton(2)" v-if="!secondPlayer">Submit</button>
+
+      <div class="user-info" v-if="secondPlayer">
+      <img :src="secondPlayer.avatar" alt="User Avatar" class="user-avatar" />
+      <div class="user-details">
+        <h2><b>{{ secondPlayer.nickname }}</b></h2>
+        <p>CS2 Skill Level: {{ secondPlayer.cs2SkillLevel }}</p>
+      </div>
     </div>
   </div>
+</div>
 </div>
 </template>
 
 <script>
 import NavBar from '@/components/NavBar.vue';
+import * as UserService from '@/services/user';
+import * as StatsService from '@/services/stats';
 
 export default {
   name: "Stats",
@@ -27,14 +45,39 @@ export default {
   },
   data() {
     return {
-      input1: '',
-      input2: ''
+      firstInput: '',
+      secondInput: '',
+      firstPlayer: null,
+      firstStats: null,
+      secondPlayer: null,
+      secondStats: null,
     };
   },
   methods: {
-    handleClick(buttonNumber) {
-      alert(`Вы нажали кнопку ${buttonNumber}`);
-    }
+    async handleComparisonButton(id) {
+      if(id == 1){
+        this.firstPlayer = await UserService.getUser(this.firstInput);
+        this.firstStats = await StatsService.getAverageStatsOf(this.firstPlayer.playerId);
+      }else{
+        this.secondPlayer = await UserService.getUser(this.secondInput);
+        this.secondStats = await StatsService.getAverageStatsOf(this.secondPlayer.playerId);
+      }
+
+      console.log(this.firstPlayer);
+    },
+
+    beforeRouteLeave(to, from, next) {
+      this.clearResponse();
+      next();
+    },
+    clearResponse() {
+      this.firstPlayer = null;
+      this.secondPlayer = null;
+      this.firstStats = null;
+      this.secondStats = null;
+      this.firstInput = '';
+      this.secondInput = '';
+    },
   }
 };
 </script>
@@ -101,5 +144,29 @@ button {
 
 button:hover {
   background-color: #ff7800;
+}
+
+.user-info {
+  position: absolute;
+  top: 75px;
+  padding: 10px;
+}
+
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.user-details h2 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+.user-details p {
+  margin: 0;
+  font-size: 1em;
+  color: #555;
 }
 </style>
