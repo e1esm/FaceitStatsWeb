@@ -3,10 +3,23 @@
     <NavBar />
 
     <div class="user-info" v-if="user">
-      <img :src="user.avatar" alt="User Avatar" class="user-avatar"/>
+      <img :src="user.avatar" alt="User Avatar" class="user-avatar" />
       <div class="user-details">
         <h2><b>{{ user.nickname }}</b></h2>
         <p>CS2 Skill Level: {{ user.cs2SkillLevel }}</p>
+      </div>
+    </div>
+    
+
+    <!-- Fixed Stats Grid in one line -->
+    <div class="stats-grid" v-if="stats">
+      <div
+        class="stat-item"
+        v-for="(value, key) in stats"
+        :key="key"
+      >
+        <span class="stat-key">{{ formatKey(key) }}</span>
+        <span class="stat-value">{{ formatValue(value) }}</span>
       </div>
     </div>
 
@@ -18,6 +31,7 @@
     </div>
   </div>
 </template>
+
 
 
 <script>
@@ -100,17 +114,26 @@ export default {
         this.stats = null;
       }
     },
+    formatKey(key) {
+    return key
+      .replace(/([a-z])([A-Z])/g, '$1 $2') 
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+    },
+
+    formatValue(value){
+      return Number(value).toFixed(2);
+    }
   },
   beforeRouteLeave(to, from, next) {
-    // Clear the user data when leaving the route
     this.clearResponse();
-    next(); // Continue navigation
+    next();
   },
 };
 </script>
 
 <style scoped>
-/* Content styles specific to the Stats view */
+
 .content {
   position: absolute;
   width: 300px;
@@ -185,5 +208,50 @@ margin: -100px 0 0 -150px;
   font-size: 1em;
   color: #555;
 }
+
+.stats-grid {
+  position: fixed; 
+  top: 250px; 
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-between; 
+  align-items: stretch;
+  gap: 20px; 
+  width: 100%;
+  padding: 10px;
+  z-index: 10;
+  flex-wrap: nowrap;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  border-style: solid;
+  border-radius: 8px;
+  border-color: #ff590079;
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  flex: 1; 
+  min-width: 0;
+  min-height: 100px;
+  height: 100%;
+}
+
+.stat-key {
+  font-weight: bold;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.stat-value {
+  font-size: 14px;
+  color: #ffffff;
+  margin-top: 5px;
+}
+
 
 </style>
