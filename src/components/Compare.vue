@@ -12,14 +12,23 @@
         <h2><b>{{ firstPlayer.nickname }}</b></h2>
         <p>CS2 Skill Level: {{ firstPlayer.cs2SkillLevel }}</p>
       </div>
+        </div>
+        <div class="stats-container" v-if="firstStats">
+        <div class="left-column">
+          <p class="title">{{ firstPlayer.name }}</p>
+          <div v-for="(value, key) in firstStats" :key="key" class="stat-row">
+            <span class="stat-key">{{ formatKey(key) }}</span>
+            <span class="stat-value" :class="getColor(value, secondStats[key])">{{ formatValue(value) }}</span>
+          </div>
+      </div>
     </div>
-    </div>
+  </div>
 
-    <div class="divider"></div>
+  <div class="divider"></div>
 
-    <div class="half">
-      <input v-model="secondInput" placeholder="Enter second user to compare" v-if="!secondPlayer"/>
-      <button @click="handleComparisonButton(2)" v-if="!secondPlayer">Submit</button>
+  <div class="half">
+    <input v-model="secondInput" placeholder="Enter second user to compare" v-if="!secondPlayer"/>
+    <button @click="handleComparisonButton(2)" v-if="!secondPlayer">Submit</button>
 
       <div class="user-info" v-if="secondPlayer">
       <img :src="secondPlayer.avatar" alt="User Avatar" class="user-avatar" />
@@ -28,6 +37,15 @@
         <p>CS2 Skill Level: {{ secondPlayer.cs2SkillLevel }}</p>
       </div>
     </div>
+    <div class="stats-container" v-if="secondStats">
+        <div class="right-column">
+          <p class="title">{{ secondPlayer.name }}</p>
+          <div v-for="(value, key) in secondStats" :key="key" class="stat-row">
+            <span class="stat-key">{{ formatKey(key) }}</span>
+            <span class="stat-value" :class="getColor(value, firstStats[key])">{{ formatValue(value) }}</span>
+          </div>
+        </div>
+      </div>
   </div>
 </div>
 </div>
@@ -78,6 +96,24 @@ export default {
       this.firstInput = '';
       this.secondInput = '';
     },
+    formatKey(key) {
+      // Format the key to be more human-readable
+      return key
+        .replace(/([A-Z])/g, ' $1')  // Add space before capital letters
+        .replace(/^./, (str) => str.toUpperCase()); // Capitalize the first letter
+    },
+    getColor(value1, value2) {
+      if (value1 > value2) {
+        return 'green';
+      } else if (value1 < value2) {
+        return 'red';
+      } else {
+        return 'blue';
+      }
+    },
+    formatValue(value){
+      return Number(value).toFixed(2);
+    }
   }
 };
 </script>
@@ -168,5 +204,65 @@ button:hover {
   margin: 0;
   font-size: 1em;
   color: #555;
+}
+
+.stats-container {
+  position: absolute;
+  top: 150px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  padding: 100px;
+  width: 50%;
+}
+
+.left-column, .right-column {
+  width: 100%;
+  padding: 20px;
+  background-color: #333;
+  border-radius: 10px;
+  box-shadow: 20px 20px 20px 20px rgba(0, 0, 0, 0.1);
+}
+
+.left-column {
+  margin-right: 10px;
+}
+
+.right-column {
+  margin-left: 10px;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.stat-key {
+  flex: 1;
+  font-size: 18px;
+}
+
+.stat-value {
+  font-size: 18px;
+  flex: 1;
+  text-align: right;
+}
+
+.stat-value.green {
+  color: rgb(18, 255, 18);
+}
+
+.stat-value.red {
+  color: rgb(255, 35, 35);
+}
+
+.stat-value.blue {
+  color: rgb(61, 168, 255);
 }
 </style>
