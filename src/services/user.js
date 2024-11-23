@@ -8,9 +8,6 @@ export async function getUser(nickname){
                 throw 'Error fetching user info: ' + error.response.status;
             }
         });
-
-        console.log(response.data);
-
     let user = new User(response.data);
     return user;
 }

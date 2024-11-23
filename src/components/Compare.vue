@@ -10,21 +10,20 @@
       <img :src="firstPlayer.avatar" alt="User Avatar" class="user-avatar" />
       <div class="user-details">
         <h2><b>{{ firstPlayer.nickname }}</b></h2>
-        <p>CS2 Skill Level: {{ firstPlayer.cs2SkillLevel }}</p>
+        <p>Skill Level: {{ firstPlayer.cs2SkillLevel }}</p>
       </div>
         </div>
         <div class="stats-container" v-if="firstStats">
         <div class="left-column">
-          <p class="title">{{ firstPlayer.name }}</p>
           <div v-for="(value, key) in firstStats" :key="key" class="stat-row">
             <span class="stat-key">{{ formatKey(key) }}</span>
-            <span class="stat-value" :class="getColor(value, secondStats[key])">{{ formatValue(value) }}</span>
+            
+            <span class="stat-value" :class="getColor(value, secondStats[key])" v-if="secondStats">{{ formatValue(value) }}</span>
+            <span class="stat-value" :class="'blue'" v-else>{{ formatValue(value) }}</span>
           </div>
       </div>
     </div>
   </div>
-
-  <div class="divider"></div>
 
   <div class="half">
     <input v-model="secondInput" placeholder="Enter second user to compare" v-if="!secondPlayer"/>
@@ -34,15 +33,15 @@
       <img :src="secondPlayer.avatar" alt="User Avatar" class="user-avatar" />
       <div class="user-details">
         <h2><b>{{ secondPlayer.nickname }}</b></h2>
-        <p>CS2 Skill Level: {{ secondPlayer.cs2SkillLevel }}</p>
+        <p>Skill Level: {{ secondPlayer.cs2SkillLevel }}</p>
       </div>
     </div>
     <div class="stats-container" v-if="secondStats">
         <div class="right-column">
-          <p class="title">{{ secondPlayer.name }}</p>
           <div v-for="(value, key) in secondStats" :key="key" class="stat-row">
             <span class="stat-key">{{ formatKey(key) }}</span>
-            <span class="stat-value" :class="getColor(value, firstStats[key])">{{ formatValue(value) }}</span>
+            <span class="stat-value" :class="getColor(value, firstStats[key])"v-if="firstStats">{{ formatValue(value) }}</span>
+            <span class="stat-value" :class="'blue'" v-else>{{ formatValue(value) }}</span>
           </div>
         </div>
       </div>
@@ -63,6 +62,7 @@ export default {
   },
   data() {
     return {
+      allMatches: false,
       firstInput: '',
       secondInput: '',
       firstPlayer: null,
@@ -75,13 +75,11 @@ export default {
     async handleComparisonButton(id) {
       if(id == 1){
         this.firstPlayer = await UserService.getUser(this.firstInput);
-        this.firstStats = await StatsService.getAverageStatsOf(this.firstPlayer.playerId);
+        this.firstStats = await StatsService.getAverageStatsOf(this.firstPlayer.playerId, this.allMatches, true);
       }else{
         this.secondPlayer = await UserService.getUser(this.secondInput);
-        this.secondStats = await StatsService.getAverageStatsOf(this.secondPlayer.playerId);
+        this.secondStats = await StatsService.getAverageStatsOf(this.secondPlayer.playerId, this.allMatches, true);
       }
-
-      console.log(this.firstPlayer);
     },
 
     beforeRouteLeave(to, from, next) {
@@ -123,12 +121,6 @@ export default {
   display: flex;
   height: 100vh;
   width: 100vw;
-}
-
-.divider {
-  width: 2px;
-  background-color: #575757; 
-  height: 100vh;
 }
 
 .half {

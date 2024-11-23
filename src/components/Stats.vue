@@ -14,9 +14,8 @@
       <div
         class="stat-item"
         v-for="(value, key) in stats"
-        :key="key"
-      >
-        <span class="stat-key">{{ formatKey(key) }}</span>
+        :key="key" v-if="key!='hltvRating' || isHLTVRequired">
+        <span class="stat-key">{{formatKey(key) }}</span>
         <span class="stat-value">{{ formatValue(value) }}</span>
       </div>
     </div>
@@ -25,6 +24,17 @@
       <div class="input-container" v-if="!user">
         <input v-model="inputData" type="text" placeholder="Enter nickname" />
         <button @click="submitData">Get stats</button>
+
+        <div class="checkbox-container" v-if="!firstPlayer && !secondPlayer">
+        <label>
+          <input type="checkbox" id="all-matches-checkbox" v-model="allMatches" />
+          <span>All matches</span>
+        </label>
+        <label>
+          <input type="checkbox" id="hltv-rating-checkbox" v-model="isHLTVRequired" />
+          <span>HLTV Rating</span>
+        </label>
+      </div>
       </div>
     </div>
   </div>
@@ -44,6 +54,8 @@ export default {
   },
   data() {
     return {
+      allMatches: false,
+      isHLTVRequired: false,
       inputData: '', 
       user: null,
       stats: null,
@@ -75,7 +87,10 @@ export default {
 
     async getAverageData() {
       try{
-        this.stats = await StatsService.getAverageStatsOf(this.user.playerId);
+        this.stats = await StatsService.getAverageStatsOf(this.user.playerId, this.allMatches, this.isHLTVRequired);
+        if(!this.isHLTVRequired){
+          delete this.stats.hltvRating;
+        }
       }catch(error){
         console.error('Error fetching data:', error);
         this.stats = null;
@@ -95,6 +110,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     this.clearResponse();
+    this.allMatches = false;
     next();
   },
 };
@@ -225,5 +241,28 @@ margin: -100px 0 0 -150px;
   margin-top: 5px;
 }
 
+.checkbox-container {
+  align-items: center;
+  margin-bottom: -5px;
+  width: 20px;
+  margin-top: 20px;
+}
+
+label {
+  display: flex;
+  width: 100vw;
+}
+
+input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
+span {
+  font-size: 14px;
+  color: white;
+}
 
 </style>
