@@ -25,11 +25,14 @@
   </div>
 
   <div class="checkbox-field">
-        <label>
-          <input type="checkbox" id="all-matches-checkbox" v-model="allMatches" />
-          <span>All matches</span>
-        </label>
+      <input type="checkbox" name="all-checkbox" id="all-matches-checkbox" v-model="allMatches">
+      <label for="all-matches-checkbox">All matches</label>
   </div>
+
+    <div class="checkbox-field">
+      <input type="checkbox" name="all-checkbox" id="all-matches-checkbox" v-model="allMatches">
+      <label for="all-matches-checkbox">Text 2</label>
+    </div>
 
   <div class="half">
     <input v-model="secondInput" placeholder="Enter second user to compare" v-if="!secondPlayer"/>
@@ -261,26 +264,28 @@ button:hover {
 }
 
 .checkbox-field{
-  position:relative;
-  background-color: grey;
+  display:inline;
+  margin-right: -50px;
+  margin-left: -50px;
+  padding-top: 5px;
   margin-top: 90px;
-  display: flex;
-  justify-content: space-between;
   width: 10%;
   height: 10%;
   align-items: center;
 }
 
-label {
-  display: flex;
-  width: 100vw;
+label{
+  display: inline;
+  margin-left: -20px;
+  padding-bottom: -10px;
+  color: white;
 }
 
-input[type="checkbox"] {
+#all-matches-checkbox{
   cursor: pointer;
   width: 16px;
   height: 16px;
-  margin-right: 8px;
+  margin-left: -45px;
 }
 
 </style>

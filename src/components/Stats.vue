@@ -13,7 +13,7 @@
       <div
         class="stat-item"
         v-for="(value, key) in stats"
-        :key="key" v-if="key!='hltvRating' || isHLTVRequired">
+        :key="key" v-if="key!=='hltvRating' || isHLTVRequired">
         <span class="stat-key">{{formatKey(key) }}</span>
         <span class="stat-value">{{ formatValue(value) }}</span>
       </div>
