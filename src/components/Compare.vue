@@ -24,14 +24,14 @@
     </div>
   </div>
 
-  <div class="checkbox-field">
+  <div class="checkbox-field" v-if="!firstPlayer && !secondPlayer">
       <input type="checkbox" name="all-checkbox" id="all-matches-checkbox" v-model="allMatches">
       <label for="all-matches-checkbox">All matches</label>
   </div>
 
     <div class="checkbox-field">
-      <input type="checkbox" name="all-checkbox" id="all-matches-checkbox" v-model="allMatches">
-      <label for="all-matches-checkbox">Text 2</label>
+      <input type="checkbox" name="all-checkbox" id="all-matches-checkbox" v-model="hltvRequired">
+      <label for="all-matches-checkbox">HLTV Rating</label>
     </div>
 
   <div class="half">
@@ -68,6 +68,7 @@ export default {
   data() {
     return {
       allMatches: false,
+      hltvRequired: false,
       firstInput: '',
       secondInput: '',
       firstPlayer: null,
@@ -80,7 +81,7 @@ export default {
     async handleComparisonButton(id) {
       if(id == 1){
         this.firstPlayer = await UserService.getUser(this.firstInput);
-        this.firstStats = await StatsService.getAverageStatsOf(this.firstPlayer.playerId, this.allMatches, true);
+        this.firstStats = await StatsService.getAverageStatsOf(this.firstPlayer.playerId, this.allMatches, this.hltvRequired);
       }else{
         this.secondPlayer = await UserService.getUser(this.secondInput);
         this.secondStats = await StatsService.getAverageStatsOf(this.secondPlayer.playerId, this.allMatches, true);
@@ -266,7 +267,7 @@ button:hover {
 .checkbox-field{
   display:inline;
   margin-right: -50px;
-  margin-left: -50px;
+  margin-left: -10px;
   padding-top: 5px;
   margin-top: 90px;
   width: 10%;
