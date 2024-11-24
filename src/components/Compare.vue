@@ -29,7 +29,7 @@
       <label for="all-matches-checkbox">All matches</label>
   </div>
 
-    <div class="checkbox-field">
+    <div class="checkbox-field" v-if="!firstPlayer && !secondPlayer">
       <input type="checkbox" name="all-checkbox" id="all-matches-checkbox" v-model="hltvRequired">
       <label for="all-matches-checkbox">HLTV Rating</label>
     </div>
@@ -82,10 +82,17 @@ export default {
       if(id == 1){
         this.firstPlayer = await UserService.getUser(this.firstInput);
         this.firstStats = await StatsService.getAverageStatsOf(this.firstPlayer.playerId, this.allMatches, this.hltvRequired);
+        if(!this.hltvRequired){
+          delete this.firstStats.hltvRating;
+        }
       }else{
         this.secondPlayer = await UserService.getUser(this.secondInput);
         this.secondStats = await StatsService.getAverageStatsOf(this.secondPlayer.playerId, this.allMatches, true);
+        if(!this.hltvRequired){
+          delete this.secondStats.hltvRating;
+        }
       }
+
     },
 
     beforeRouteLeave(to, from, next) {
@@ -184,6 +191,7 @@ button:hover {
   position: absolute;
   top: 75px;
   padding: 10px;
+  color: white;
 }
 
 .user-avatar {
@@ -230,11 +238,6 @@ button:hover {
   margin-left: 10px;
 }
 
-.title {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
 .stat-row {
   display: flex;
   justify-content: space-between;
@@ -244,6 +247,7 @@ button:hover {
 .stat-key {
   flex: 1;
   font-size: 18px;
+  color: white;
 }
 
 .stat-value {
