@@ -1,6 +1,5 @@
 <template>
     <div id="app">
-    <NavBar />
   <div class="container">
     <div class="half">
       <input v-model="firstInput" placeholder="Enter first user to compare" v-if="!firstPlayer"/>
@@ -23,6 +22,13 @@
           </div>
       </div>
     </div>
+  </div>
+
+  <div class="checkbox-field">
+        <label>
+          <input type="checkbox" id="all-matches-checkbox" v-model="allMatches" />
+          <span>All matches</span>
+        </label>
   </div>
 
   <div class="half">
@@ -51,15 +57,11 @@
 </template>
 
 <script>
-import NavBar from '@/components/NavBar.vue';
 import * as UserService from '@/services/user';
 import * as StatsService from '@/services/stats';
 
 export default {
   name: "Stats",
-  components: {
-    NavBar,
-  },
   data() {
     return {
       allMatches: false,
@@ -257,4 +259,28 @@ button:hover {
 .stat-value.blue {
   color: rgb(61, 168, 255);
 }
+
+.checkbox-field{
+  position:relative;
+  background-color: grey;
+  margin-top: 90px;
+  display: flex;
+  justify-content: space-between;
+  width: 10%;
+  height: 10%;
+  align-items: center;
+}
+
+label {
+  display: flex;
+  width: 100vw;
+}
+
+input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
 </style>

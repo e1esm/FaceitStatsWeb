@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <NavBar />
 
     <div class="user-info" v-if="user">
       <img :src="user.avatar" alt="User Avatar" class="user-avatar" />
@@ -43,15 +42,11 @@
 
 
 <script>
-import NavBar from '@/components/NavBar.vue';
 import * as UserService from '@/services/user';
 import * as StatsService from '@/services/stats';
 
 export default {
   name: "Stats",
-  components: {
-    NavBar,
-  },
   data() {
     return {
       allMatches: false,

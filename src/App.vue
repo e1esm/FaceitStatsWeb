@@ -2,11 +2,14 @@
   <div id="app">
     <nav>
       <div class="nav-container">
-        <ul class="menu center-menu">
+        <div class="left-side">
+        <img src="https://seeklogo.com/images/F/faceit-logo-B519B0AC75-seeklogo.com.png" alt="Logo" width="25px" height="25px" />
+        <ul class="menu left-menu">
           <li><router-link to="/stats">Stats</router-link></li>
-          <li><router-link to="/pick">Compare</router-link></li>
-          <li><router-link to="/compare">Pick map</router-link></li>
+          <li><router-link to="/compare">Compare</router-link></li>
+          <li><router-link to="/pick">Pick map</router-link></li>
         </ul>
+      </div>
 
         <ul class="menu right-menu">
           <li><router-link to="/profile">Sign in</router-link></li>
@@ -32,7 +35,6 @@ body {
   width: 100%;
   height: 100%;
 }
-
 nav {
   width: 100%;
   background-color: #1e1e1e;
@@ -41,12 +43,22 @@ nav {
   left: 0;
   padding: 10px 20px;
   box-shadow: 10px 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 10;
 }
 
 .nav-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.left-side {
+  display: flex;
+  align-items: center;
+}
+
+.left-side img {
+  margin-right: 15px;
 }
 
 .menu {
@@ -57,8 +69,10 @@ nav {
   margin: 0;
 }
 
-.center-menu {
-  margin: 0 auto;
+.left-menu {
+  margin-left: 25px;
+  display: flex;
+  gap: 30px;
 }
 
 .menu li {
@@ -69,7 +83,7 @@ nav {
   text-decoration: none;
   color: #b5b5b5;
   font-size: 18px;
-  transition: color 0.3s ease, background-color 0.3s ease; /* Smooth hover effect */
+  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .menu a:hover {
@@ -81,13 +95,14 @@ nav {
   margin: 0;
 }
 
-.right-menu li{
+.right-menu li {
   list-style: none;
+  width: 100px;
   background-color: #ff5b00;
   border-radius: 5px;
 }
 
-.right-menu a{
+.right-menu a {
   color: #ffffff;
   border-radius: 5px;
 }
@@ -98,3 +113,4 @@ nav {
 }
 
 </style>
+
