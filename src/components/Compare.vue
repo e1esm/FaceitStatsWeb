@@ -1,9 +1,8 @@
 <template>
-    <div id="app">
   <div class="container">
     <div class="half">
       <input v-model="firstInput" placeholder="Enter first user to compare" v-if="!firstPlayer"/>
-      <button @click="handleComparisonButton(1)" v-if="!firstPlayer">Submit</button>
+      <button @click="handleComparisonButton(1)" v-if="!firstPlayer">Get stats</button>
 
       <div class="user-info" v-if="firstPlayer">
       <img :src="firstPlayer.avatar" alt="User Avatar" class="user-avatar" />
@@ -23,20 +22,20 @@
       </div>
     </div>
   </div>
-
-  <div class="checkbox-field" v-if="!firstPlayer && !secondPlayer">
-      <input type="checkbox" name="all-checkbox" id="all-matches-checkbox" v-model="allMatches">
-      <label for="all-matches-checkbox">All matches</label>
-  </div>
-
-    <div class="checkbox-field" v-if="!firstPlayer && !secondPlayer">
-      <input type="checkbox" name="all-checkbox" id="all-matches-checkbox" v-model="hltvRequired">
-      <label for="all-matches-checkbox">HLTV Rating</label>
+  <div class="checkbox-field">
+      <div  v-if="!firstPlayer && !secondPlayer">
+        <input type="checkbox" name="all-checkbox" id="all-matches-checkbox" v-model="allMatches">
+        <label for="all-matches-checkbox">All matches</label>
     </div>
 
+      <div  v-if="!firstPlayer && !secondPlayer">
+        <input type="checkbox" name="all-checkbox" id="all-matches-checkbox" v-model="hltvRequired">
+        <label for="all-matches-checkbox">HLTV Rating</label>
+      </div>
+  </div>
   <div class="half">
     <input v-model="secondInput" placeholder="Enter second user to compare" v-if="!secondPlayer"/>
-    <button @click="handleComparisonButton(2)" v-if="!secondPlayer">Submit</button>
+    <button @click="handleComparisonButton(2)" v-if="!secondPlayer">Get stats</button>
 
       <div class="user-info" v-if="secondPlayer">
       <img :src="secondPlayer.avatar" alt="User Avatar" class="user-avatar" />
@@ -55,7 +54,6 @@
         </div>
       </div>
   </div>
-</div>
 </div>
 </template>
 
@@ -132,25 +130,21 @@ export default {
 <style scoped>
 .container {
   display: flex;
-  height: 100vh;
-  width: 100vw;
+  margin-top: 20px;
 }
 
 .half {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;    
+  align-items: center;
+  padding: 0 auto;
+  width: auto;
 }
 
 input {
-  position: absolute;
-  top: 100px;
   padding: 10px;
-  height: 40px;
   font-size: 16px;
-  width: 25%;
   margin-bottom: 10px;
   border: 1px solid #444;
   border-radius: 5px;
@@ -170,8 +164,6 @@ input:hover {
 
 
 button {
-  position: absolute;
-  top: 155px;
   padding: 10px 20px;
   font-size: 16px;
   background-color: #ff5b00;
@@ -180,7 +172,7 @@ button {
   border-radius: 5px;
   color: white;
   cursor: pointer;
-  width: 20%;
+  width: 30%;
 }
 
 button:hover {
@@ -188,9 +180,8 @@ button:hover {
 }
 
 .user-info {
-  position: absolute;
-  top: 75px;
-  padding: 10px;
+  position: relative;
+  padding: 0 auto;
   color: white;
 }
 
@@ -203,31 +194,33 @@ button:hover {
 
 .user-details h2 {
   margin: 0;
+  text-align: center;
   font-size: 1.5em;
 }
 
 .user-details p {
   margin: 0;
   font-size: 1em;
+  text-align: center;
   color: #555;
 }
 
 .stats-container {
-  position: absolute;
-  top: 150px;
-  padding: 10px;
+  position: relative;
+  padding-top: 10px;
   display: flex;
   justify-content: space-between;
-  padding: 100px;
-  width: 50%;
+  width: 0 auto;
+  overflow:hidden;
 }
 
 .left-column, .right-column {
   width: 100%;
-  padding: 20px;
+  padding: 5%;
   background-color: #333;
   border-radius: 10px;
   box-shadow: 20px 20px 20px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10%;
 }
 
 .left-column {
@@ -269,20 +262,12 @@ button:hover {
 }
 
 .checkbox-field{
-  display:inline;
-  margin-right: -50px;
-  margin-left: -10px;
-  padding-top: 5px;
-  margin-top: 90px;
-  width: 10%;
-  height: 10%;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 label{
-  display: inline;
-  margin-left: -20px;
-  padding-bottom: -10px;
   color: white;
 }
 
@@ -290,7 +275,6 @@ label{
   cursor: pointer;
   width: 16px;
   height: 16px;
-  margin-left: -45px;
 }
 
 </style>

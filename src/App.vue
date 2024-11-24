@@ -1,5 +1,4 @@
 <template>
-  <div id="app">
     <nav>
       <div class="nav-container">
         <div class="left-side">
@@ -18,9 +17,7 @@
       </div>
     </nav>
     <router-view />
-  </div>
 </template>
-
 <style>
 
 
@@ -31,16 +28,12 @@ body {
 }
 
 #app {
-  text-align: center;
-  width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 nav {
   width: 100%;
   background-color: #1e1e1e;
-  position: fixed;
-  top: 0;
-  left: 0;
   padding: 10px 20px;
   box-shadow: 10px 2px 5px rgba(0, 0, 0, 0.1);
   z-index: 10;
@@ -100,6 +93,7 @@ nav {
   width: 100px;
   background-color: #ff5b00;
   border-radius: 5px;
+  padding-left: 10px;
 }
 
 .right-menu a {
@@ -114,3 +108,5 @@ nav {
 
 </style>
 
+<script setup lang="ts">
+</script>

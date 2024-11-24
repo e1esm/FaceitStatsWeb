@@ -1,6 +1,4 @@
 <template>
-  <div id="app">
-
     <div class="user-info" v-if="user">
       <img :src="user.avatar" alt="User Avatar" class="user-avatar" />
       <div class="user-details">
@@ -19,8 +17,8 @@
       </div>
     </div>
 
-    <div class="content">
-      <div class="input-container" v-if="!user">
+    <div class="content"  v-if="!user">
+      <div class="input-container">
         <input v-model="inputData" type="text" placeholder="Enter nickname" />
         <button @click="submitData">Get stats</button>
 
@@ -36,7 +34,6 @@
       </div>
       </div>
     </div>
-  </div>
 </template>
 
 
@@ -113,18 +110,14 @@ export default {
 
 <style scoped>
 
-#app{
-  width: 100%;
-  height: 100%
-}
 
 .content {
-  position: absolute;
   width: 300px;
   z-index: 15;
   top: 50%;
   left: 50%;
-  margin: -100px 0 0 -150px;
+  padding-top: 100px;
+  margin: 0 auto;
 }
 
 .input-container {
@@ -167,28 +160,28 @@ button:hover {
 }
 
 .user-info {
-position: absolute;
-width: 300px;
-z-index: 15;
-top: 200px;
-left: 50%;
-margin: -100px 0 0 -150px;
+  width: 300px;
+  z-index: 15;
+  padding-top: 25px;
+  margin: 0 auto;
 }
 
 .user-avatar {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  margin-right: 15px;
+  margin-left: 100px;
 }
 
 .user-details h2 {
   margin: 0;
+  margin-left: 100px;
   font-size: 1.5em;
 }
 
 .user-details p {
   margin: 0;
+  margin-left: 100px;
   font-size: 1em;
   color: #555;
 }
@@ -203,8 +196,8 @@ margin: -100px 0 0 -150px;
   align-items: stretch;
   gap: 20px; 
   width: 100%;
+  overflow: scroll;
   padding: 10px;
-  z-index: 10;
   flex-wrap: nowrap;
 }
 
@@ -220,7 +213,7 @@ margin: -100px 0 0 -150px;
   box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
   flex: 1; 
-  min-width: 0;
+  width: 0 auto;;
   min-height: 100px;
 }
 
