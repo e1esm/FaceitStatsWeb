@@ -17,6 +17,44 @@
       </div>
     </div>
 
+   
+    <div class="matches-table" v-if="matchData">
+    <h1 class="table-title">Match History</h1>
+    <table class="matches-table-table">
+      <thead class="table-header">
+        <tr>
+          <th v-for="header in headers" :key="header" class="header-cell">
+            {{ header }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(match, index) in matchData"
+          :key="index"
+          class="match-row"
+        >
+          <td class="cell">{{ match.stats.map }}</td>
+          <td class="cell" :class="getScoreClass(match.stats.score)">
+            {{ match.stats.score }}
+          </td>
+          <td class="cell" :class="getKDRatingClass(match.stats.kdRatio)">{{ match.stats.kdRatio }}</td>
+          <td class="cell">{{ match.stats.krRatio }}</td>
+          <td class="cell">{{ match.stats.pentaKills }}</td>
+          <td class="cell">{{ match.stats.quadroKills }}</td>
+          <td class="cell">{{ match.stats.tripleKills }}</td>
+          <td class="cell">{{ match.stats.doubleKills }}</td>
+          <td class="cell">{{ match.stats.headshotsPercentage }}%</td>
+          <td class="cell" :class="getHltvRatingClass(match.stats.hltvRating.toFixed(2))">{{ match.stats.hltvRating.toFixed(2) }}</td>
+          <td class="cell">{{ match.stats.mvps }}</td>
+          <td class="cell">
+            <a :href="`https://www.faceit.com/en/cs2/room/${match.matchId}`" target="_blank" class="link">🔗</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
     <div class="content"  v-if="!user">
       <div class="input-container">
         <input v-model="inputData" type="text" placeholder="Enter nickname" />
@@ -51,12 +89,43 @@ export default {
       inputData: '', 
       user: null,
       stats: null,
+      matchData: null,
     };
+  },
+  computed: {
+    headers() {
+      return [
+          "Map", "Score", "K/D", "K/R", '5 kills', '4 kills', '3 kills', '2 kills', "HS (%)", "HLTV", 'MVPs', "Match"
+      ];
+    }
   },
   methods: {
     async submitData() {
         await this.getUserBasicInfo();
         await this.getAverageData();
+        await this.getMatchHistory();
+    },
+    getScoreClass(score) {
+      const [left, right] = score.split('/').map(Number);
+      return left > right ? 'text-green-500' : 'text-red-500';
+    },
+    getHltvRatingClass(rating){
+      if(rating < 0.8){
+          return 'text-red-500';
+      }else if(rating < 1.3){
+        return 'text-yellow-500';
+      }else{
+        return 'text-green-500';
+      }
+    },
+    getKDRatingClass(kd){
+      if(kd < 0.65){
+          return 'text-red-500';
+      }else if(kd < 1.1){
+        return 'text-yellow-500';
+      }else{
+        return 'text-green-500';
+      }
     },
     clearResponse() {
       this.user = null;
@@ -86,6 +155,20 @@ export default {
       }catch(error){
         console.error('Error fetching data:', error);
         this.stats = null;
+        this.inputData = '';
+      }
+    },
+
+    async getMatchHistory(){
+      try{
+        this.matchData = await StatsService.getMatchesHistory(this.user.playerId, this.allMatches, this.isHLTVRequired);
+        console.log(this.matchData);
+        if(!this.isHLTVRequired){
+          delete this.matchData.stats.hltvRating;
+        }
+      }catch(error){
+        console.error('Error fetching match history: ', error);
+        this.matchData = null;
         this.inputData = '';
       }
     },
@@ -187,17 +270,16 @@ button:hover {
 }
 
 .stats-grid {
-  position: fixed; 
-  top: 250px; 
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
+  position: relative; 
+  margin: 0 auto;
+  align-items: center;
   justify-content: space-between; 
   align-items: stretch;
+  display: flex;  
   gap: 20px; 
   width: 100%;
+  min-height: 100px;
   overflow: scroll;
-  padding: 10px;
   flex-wrap: nowrap;
 }
 
@@ -206,14 +288,14 @@ button:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 15px;
+  padding: 0 auto;
   border-style: solid;
   border-radius: 8px;
   border-color: #ff590079;
   box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
   flex: 1; 
-  width: 0 auto;;
+  width: 0 auto;
   min-height: 100px;
 }
 
@@ -251,6 +333,88 @@ input[type="checkbox"] {
 span {
   font-size: 14px;
   color: white;
+}
+
+th {
+  text-align: center;
+}
+td {
+  text-align: center;
+}
+
+.matches-table {
+  position: relative;
+  align-self: center;
+  padding-top: 50px;
+}
+
+.table-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: white;
+}
+
+.matches-table-table {
+  border-collapse: collapse;
+}
+
+.table-header {
+  background-color: #414141;
+  color: white;
+}
+
+th,
+td {
+  text-align: center;
+  padding: 1rem;
+  border: 1px solid #d1d5db;
+}
+
+.header-cell {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.match-row:nth-child(odd) {
+  background-color: #23232352;
+}
+
+.match-row:nth-child(even) {
+  background-color: #0d0d0d72;
+}
+
+.match-row:hover {
+  background-color: #2b2b2b;
+}
+
+.cell {
+  border: 1px solid #d1d5db;
+}
+
+.link {
+  color: #3b82f6;
+}
+
+.link:hover {
+  color: #2563eb;
+}
+
+.text-blue-500 {
+  color: #3b82f6;
+}
+
+.text-green-500 {
+  color: #10b981;
+}
+
+.text-red-500 {
+  color: #ef4444;
+}
+
+.text-yellow-500 {
+  color: #f59e0b;
 }
 
 </style>
