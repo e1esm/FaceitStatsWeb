@@ -23,7 +23,7 @@
     <table class="matches-table-table">
       <thead class="table-header">
         <tr>
-          <th v-for="header in headers" :key="header" class="header-cell">
+          <th v-for="header in headers.filter(header => header != 'HLTV' || (header && isHLTVRequired))" :key="header" class="header-cell">
             {{ header }}
           </th>
         </tr>
@@ -45,7 +45,7 @@
           <td class="cell">{{ match.stats.tripleKills }}</td>
           <td class="cell">{{ match.stats.doubleKills }}</td>
           <td class="cell">{{ match.stats.headshotsPercentage }}%</td>
-          <td class="cell" :class="getHltvRatingClass(match.stats.hltvRating.toFixed(2))">{{ match.stats.hltvRating.toFixed(2) }}</td>
+          <td class="cell" v-if="isHLTVRequired" :class="getHltvRatingClass(match.stats.hltvRating.toFixed(2))">{{ match.stats.hltvRating == 0 ? '-' :  match.stats.hltvRating.toFixed(2)}}</td>
           <td class="cell">{{ match.stats.mvps }}</td>
           <td class="cell">
             <a :href="`https://www.faceit.com/en/cs2/room/${match.matchId}`" target="_blank" class="link">🔗</a>
@@ -162,10 +162,6 @@ export default {
     async getMatchHistory(){
       try{
         this.matchData = await StatsService.getMatchesHistory(this.user.playerId, this.allMatches, this.isHLTVRequired);
-        console.log(this.matchData);
-        if(!this.isHLTVRequired){
-          delete this.matchData.stats.hltvRating;
-        }
       }catch(error){
         console.error('Error fetching match history: ', error);
         this.matchData = null;
