@@ -6,7 +6,11 @@
         <p>CS2 Skill Level: {{ user.cs2SkillLevel }}</p>
       </div>
     </div>
-    
+
+  <h1 style="color: white;text-align: center" v-if="allMatches && stats">Stats for all matches</h1>
+  <h1 style="color: white;text-align: center" v-if="!allMatches && stats">Stats for last 20 matches</h1>
+
+    <h1 style="text-align: center;color: white;margin-top: 40px" v-if="stats">Overall statistics</h1>
     <div class="stats-grid" v-if="stats">
       <div
         class="stat-item"
@@ -17,13 +21,82 @@
       </div>
     </div>
 
+    <div class="average-field" v-if="averageStatByMap">
+      <h1 style="text-align: center;color: white">Average stats by map</h1>
+    <div class="average-slider">
+    <div class="map_img"
+             v-for="(value, key) in averageStatByMap"
+             :key="key" v-if="key !== 'hltvRating' || isHLTVRequired" :style="backgroundStyle(imageLinkByMap(value.map))">
+            <div class="blur">
+              <div class="map_name">{{value.map}}</div>
+            <div class="average-row">
+                <div class="average-column">
+                  <div class="average-row_entry">Kills</div>
+                  <div class="average-row_entry">{{formatValue(value.kills)}}</div>
+                </div>
+              <div class="average-column">
+                <h1 class="average-row_entry">Assists</h1>
+                <h2 class="average-row_entry">{{formatValue(value.assists)}}</h2>
+              </div>
+              <div class="average-column">
+                <h1 class="average-row_entry">Deaths</h1>
+                <h2 class="average-row_entry">{{formatValue(value.deaths)}}</h2>
+              </div>
+            </div>
+      <div class="average-row">
+        <div class="average-column">
+          <h1 class="average-row_entry">2k</h1>
+          <h2 class="average-row_entry">{{formatValue(value.doubleKills)}}</h2>
+        </div>
+        <div class="average-column">
+          <h1 class="average-row_entry">3k</h1>
+          <h2 class="average-row_entry">{{formatValue(value.trippleKills)}}</h2>
+        </div>
+        <div class="average-column">
+          <h1 class="average-row_entry">4k</h1>
+          <h2 class="average-row_entry">{{formatValue(value.quadroKills)}}</h2>
+        </div>
+        <div class="average-column">
+          <h1 class="average-row_entry">5k</h1>
+          <h2 class="average-row_entry">{{formatValue(value.aces)}}</h2>
+        </div>
+      </div>
+      <div class="average-row">
+        <div class="average-column" v-if="isHLTVRequired">
+          <h1 class="average-row_entry">HLTV</h1>
+          <h2 class="average-row_entry">{{formatValue(value.hltvRating)}}</h2>
+        </div>
+        <div class="average-column">
+          <h1 class="average-row_entry">MVP</h1>
+          <h2 class="average-row_entry">{{formatValue(value.mvps)}}</h2>
+        </div>
+      </div>
+      <div class="average-row">
+        <div class="average-column">
+          <h1 class="average-row_entry">K/D</h1>
+          <h2 class="average-row_entry">{{formatValue(value.kdRate)}}</h2>
+        </div>
+        <div class="average-column">
+          <h1 class="average-row_entry">K/R</h1>
+          <h2 class="average-row_entry">{{formatValue(value.krRate)}}</h2>
+        </div>
+        <div class="average-column">
+          <h1 class="average-row_entry">HS(%)</h1>
+          <h2 class="average-row_entry">{{formatValue(value.headshotPercentage)}}</h2>
+        </div>
+      </div>
+      </div>
+    </div>
+    </div>
+    </div>
    
     <div class="matches-table" v-if="matchData">
     <h1 class="table-title">Match History</h1>
+      <div class="matches-table-scrollable">
     <table class="matches-table-table">
       <thead class="table-header">
         <tr>
-          <th v-for="header in headers.filter(header => header != 'HLTV' || (header && isHLTVRequired))" :key="header" class="header-cell">
+          <th v-for="header in headers.filter(header => header !== 'HLTV' || (header && isHLTVRequired))" :key="header" class="header-cell">
             {{ header }}
           </th>
         </tr>
@@ -53,6 +126,7 @@
         </tr>
       </tbody>
     </table>
+      </div>
   </div>
 
     <div class="content"  v-if="!user">
@@ -90,6 +164,7 @@ export default {
       user: null,
       stats: null,
       matchData: null,
+      averageStatByMap: null,
     };
   },
   computed: {
@@ -100,9 +175,15 @@ export default {
     }
   },
   methods: {
+    backgroundStyle(link) {
+      return {
+        backgroundImage: `url(${link})`,
+      }
+    },
     async submitData() {
         await this.getUserBasicInfo();
         await this.getAverageData();
+        await this.getAverageStatsByMap();
         await this.getMatchHistory();
     },
     getScoreClass(score) {
@@ -137,7 +218,6 @@ export default {
       try {
         const nickname = this.inputData || '';
         this.user = await UserService.getUser(nickname);
-
         this.inputData = '';
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -152,13 +232,21 @@ export default {
         if(!this.isHLTVRequired){
           delete this.stats.hltvRating;
         }
+        delete this.stats.timesPlayed;
       }catch(error){
         console.error('Error fetching data:', error);
         this.stats = null;
         this.inputData = '';
       }
     },
-
+    async getAverageStatsByMap(){
+      try{
+        this.averageStatByMap = await StatsService.getAverageStatsPerEachMap(this.user.playerId, this.allMatches, this.isHLTVRequired);
+      }catch (error){
+        console.error('Error fetching map stats: ', error);
+        this.inputData = '';
+      }
+    },
     async getMatchHistory(){
       try{
         this.matchData = await StatsService.getMatchesHistory(this.user.playerId, this.allMatches, this.isHLTVRequired);
@@ -177,6 +265,31 @@ export default {
 
     formatValue(value){
       return Number(value).toFixed(2);
+    },
+
+    imageLinkByMap(map){
+      switch(map){
+        case "de_train":
+          return "https://distribution.faceit-cdn.net/images/9e2d5b60-e16e-4309-8e77-8d4427938095.jpeg"
+        case "de_nuke":
+          return "https://distribution.faceit-cdn.net/images/faa7775b-f42b-4627-891a-21ee7cc13637.jpeg"
+        case "de_vertigo":
+          return "https://distribution.faceit-cdn.net/images/a8d0572f-8a89-474a-babc-c2009cdc42f7.jpeg"
+        case "de_inferno":
+          return "https://distribution.faceit-cdn.net/images/d71cae42-b38c-470d-a548-0c59d6c71fbe.jpeg"
+        case "de_mirage":
+          return "https://distribution.faceit-cdn.net/images/c47710c4-4407-4dbd-ac89-2ef3b20a262e.jpeg"
+        case "de_dust2":
+          return "https://distribution.faceit-cdn.net/images/4eafa800-b504-4dd2-afd0-90882c729140.jpeg"
+        case "de_anubis":
+          return "https://distribution.faceit-cdn.net/images/1c2412c7-ae0c-4fa1-ad86-82a3287cb479.jpeg"
+        case "de_ancient":
+          return "https://distribution.faceit-cdn.net/images/6f72ffec-7607-44cf-9c31-09a865fa92f5.jpeg"
+        case "de_overpass":
+          return "https://distribution.faceit-cdn.net/images/8ba6f730-fa31-4dd7-9b41-4cff81d79fef.jpeg"
+        default:
+          return "";
+      }
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -243,6 +356,7 @@ button:hover {
   z-index: 15;
   padding-top: 25px;
   margin: 0 auto;
+  color: white;
 }
 
 .user-avatar {
@@ -256,6 +370,7 @@ button:hover {
   margin: 0;
   margin-left: 100px;
   font-size: 1.5em;
+  color: #b1b1b1;
 }
 
 .user-details p {
@@ -277,6 +392,10 @@ button:hover {
   min-height: 100px;
   overflow: scroll;
   flex-wrap: nowrap;
+}
+
+.stats-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .stat-item {
@@ -341,7 +460,18 @@ td {
 .matches-table {
   position: relative;
   align-self: center;
-  padding-top: 50px;
+  padding-top: 85px;
+  width: 100%;
+}
+
+.matches-table-scrollable{
+  width: 100%;
+  overflow: scroll;
+  text-align: center;
+}
+
+.matches-table-scrollable::-webkit-scrollbar {
+  display: none;
 }
 
 .table-title {
@@ -354,6 +484,8 @@ td {
 
 .matches-table-table {
   border-collapse: collapse;
+  overflow: scroll;
+  margin: 0 auto;
 }
 
 .table-header {
@@ -366,6 +498,7 @@ td {
   text-align: center;
   padding: 1rem;
   border: 1px solid #d1d5db;
+  color: #b1b1b1;
 }
 
 .header-cell {
@@ -412,5 +545,86 @@ td {
 .text-yellow-500 {
   color: #f59e0b;
 }
+
+.average-field{
+  width: 100%;
+  height: 450px;
+  min-height: 450px;
+  margin-top: 50px;
+  position: relative;
+  background-color: inherit;
+}
+
+.average-slider{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  overflow: scroll;
+  position: relative;
+}
+
+.average-slider::-webkit-scrollbar {
+  display: none;
+}
+
+.blur{
+  backdrop-filter: blur(5px) brightness(65%);
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+}
+
+.map_name{
+  text-align: center;
+  padding-top: 7px;
+  padding-bottom: 5px;
+  font-size: 20px;
+  color: #ffffff;
+  font-family: "Times New Roman",serif;
+  font-weight: bold;
+}
+
+.average-row{
+  flex-direction: row;
+  display: flex;
+  color: white;
+  border-color: white;
+  border-style: solid;
+  border-width: 1px;
+  box-sizing: border-box;
+  width: 100%;
+  height: calc(100% / 4.8);
+  max-width: 100%;
+}
+
+
+.average-column{
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  color: white;
+  font-size: 14px;
+}
+
+.average-row_entry{
+  font-weight: bold;
+  font-size: 20px;
+  color: #ffffff;
+  text-align: center;
+  height: 50%;
+}
+
+.map_img{
+  height: 100%;
+  background-size: cover;
+  min-width: 450px;
+  border-style: solid;
+  border-radius: 8px;
+  border-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
 
 </style>

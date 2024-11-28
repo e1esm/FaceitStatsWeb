@@ -1,8 +1,13 @@
 <template>
-    <nav>
-      <div class="nav-container">
-        <div class="left-side">
-        <img src="https://seeklogo.com/images/F/faceit-logo-B519B0AC75-seeklogo.com.png" alt="Logo" width="25px" height="25px" />
+  <nav>
+    <div class="nav-container">
+      <div class="left-side">
+        <img
+            src="https://play-lh.googleusercontent.com/4iFS-rI0ImIFZyTwjidPChDOTUGxZqX2sCBLRsf9g_noMIUnH9ywsCmCzSu9vSM9Jg"
+            alt="Logo"
+            width="25px"
+            height="25px"
+        />
         <ul class="menu left-menu">
           <li><router-link to="/stats">Stats</router-link></li>
           <li><router-link to="/compare">Compare</router-link></li>
@@ -10,17 +15,16 @@
         </ul>
       </div>
 
-        <ul class="menu right-menu">
-          <li><router-link to="/profile">Sign in</router-link></li>
-          <li><router-link to="/settings">Sign up</router-link></li>
-        </ul>
-      </div>
+      <ul class="menu right-menu">
+        <li><router-link to="/profile">Sign in</router-link></li>
+        <li><router-link to="/settings">Sign up</router-link></li>
+      </ul>
+    </div>
     </nav>
     <router-view />
-</template>
+  </template>
+
 <style>
-
-
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -31,6 +35,7 @@ body {
   display: flex;
   flex-direction: column;
 }
+
 nav {
   width: 100%;
   background-color: #1e1e1e;
@@ -107,6 +112,3 @@ nav {
 }
 
 </style>
-
-<script setup lang="ts">
-</script>

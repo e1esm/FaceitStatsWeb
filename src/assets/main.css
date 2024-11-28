@@ -24,3 +24,7 @@ a,
     grid-template-columns: 1fr 1fr;
   }
 }
+
+body::-webkit-scrollbar {
+  display: none;
+}

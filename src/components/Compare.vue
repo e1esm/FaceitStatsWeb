@@ -7,7 +7,7 @@
       <div class="user-info" v-if="firstPlayer">
       <img :src="firstPlayer.avatar" alt="User Avatar" class="user-avatar" />
       <div class="user-details">
-        <h2><b>{{ firstPlayer.nickname }}</b></h2>
+        <h2 style="color: white"><b>{{ firstPlayer.nickname }}</b></h2>
         <p>Skill Level: {{ firstPlayer.cs2SkillLevel }}</p>
       </div>
         </div>
@@ -23,6 +23,14 @@
     </div>
   </div>
   <div class="checkbox-field">
+    <div v-if="firstPlayer && secondPlayer && allMatches">
+      <h1 style="text-align: center;margin-top: -300px">All matches</h1>
+    </div>
+
+    <div v-if="firstPlayer && secondPlayer && !allMatches">
+      <h1 style="text-align: center;margin-top: -300px;color: white">20 matches</h1>
+    </div>
+
       <div  v-if="!firstPlayer && !secondPlayer">
         <input type="checkbox" name="all-checkbox" id="all-matches-checkbox" v-model="allMatches">
         <label for="all-matches-checkbox">All matches</label>
@@ -40,7 +48,7 @@
       <div class="user-info" v-if="secondPlayer">
       <img :src="secondPlayer.avatar" alt="User Avatar" class="user-avatar" />
       <div class="user-details">
-        <h2><b>{{ secondPlayer.nickname }}</b></h2>
+        <h2 style="color: white"><b>{{ secondPlayer.nickname }}</b></h2>
         <p>Skill Level: {{ secondPlayer.cs2SkillLevel }}</p>
       </div>
     </div>
@@ -179,7 +187,7 @@ button:hover {
   background-color: #ff7800;
 }
 
-.user-info {
+. user-info {
   position: relative;
   padding: 0 auto;
   color: white;
