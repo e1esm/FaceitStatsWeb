@@ -1,5 +1,6 @@
 <template>
     <div class="user-info" v-if="user">
+      <button class="clear-button" @click="clearPlayer()">❌</button>
       <img :src="user.avatar" alt="User Avatar" class="user-avatar" />
       <div class="user-details">
         <h2><b>{{ user.nickname }}</b></h2>
@@ -132,7 +133,7 @@
     <div class="content"  v-if="!user">
       <div class="input-container">
         <input v-model="inputData" type="text" placeholder="Enter nickname" />
-        <button @click="submitData">Get stats</button>
+        <button @click="submitData" class="stats-button">Get stats</button>
 
         <div class="checkbox-container" v-if="!firstPlayer && !secondPlayer">
         <label>
@@ -175,6 +176,15 @@ export default {
     }
   },
   methods: {
+    clearPlayer(){
+      this.stats = null;
+      this.user = null;
+      this.inputData = '';
+      this.averageStatByMap = null
+      this.matchData = null;
+      this.isHLTVRequired = false;
+      this.allMatches = false;
+    },
     backgroundStyle(link) {
       return {
         backgroundImage: `url(${link})`,
@@ -336,7 +346,7 @@ input:focus {
   border-color: #ff5b00;
 }
 
-button {
+.stats-button {
   padding: 10px 20px;
   font-size: 16px;
   background-color: #ff5b00;
@@ -347,7 +357,7 @@ button {
   width: 100%;
 }
 
-button:hover {
+.stats-button:hover {
   background-color: #ff7800;
 }
 
@@ -624,6 +634,23 @@ td {
   border-radius: 8px;
   border-color: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.clear-button {
+  position: relative;
+  top: -40px;
+  left: 10px;
+  margin-bottom: 10px;
+  padding-left: 30px;
+  margin-left: -40px;
+  height: 30px;
+  background-color: inherit;
+  width: 30px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
 }
 
 

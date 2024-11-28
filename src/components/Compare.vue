@@ -1,8 +1,10 @@
 <template>
   <div class="container">
     <div class="half">
+      <button class="clear-button" v-if="firstPlayer" @click="clearPlayer(1)">❌</button>
+
       <input v-model="firstInput" placeholder="Enter first user to compare" v-if="!firstPlayer"/>
-      <button @click="handleComparisonButton(1)" v-if="!firstPlayer">Get stats</button>
+      <button @click="handleComparisonButton(1)" v-if="!firstPlayer" class="stats-button">Get stats</button>
 
       <div class="user-info" v-if="firstPlayer">
       <img :src="firstPlayer.avatar" alt="User Avatar" class="user-avatar" />
@@ -42,8 +44,9 @@
       </div>
   </div>
   <div class="half">
+    <button class="clear-button" v-if="secondPlayer" @click="clearPlayer(2)">❌</button>
     <input v-model="secondInput" placeholder="Enter second user to compare" v-if="!secondPlayer"/>
-    <button @click="handleComparisonButton(2)" v-if="!secondPlayer">Get stats</button>
+    <button @click="handleComparisonButton(2)" v-if="!secondPlayer" class="stats-button">Get stats</button>
 
       <div class="user-info" v-if="secondPlayer">
       <img :src="secondPlayer.avatar" alt="User Avatar" class="user-avatar" />
@@ -99,6 +102,17 @@ export default {
         }
       }
 
+    },
+    clearPlayer(n){
+      if(n === 1){
+        this.firstPlayer = null;
+        this.firstInput = '';
+        this.firstStats = null;
+      }else{
+        this.secondPlayer = null;
+        this.secondInput = '';
+        this.secondStats = null;
+      }
     },
 
     beforeRouteLeave(to, from, next) {
@@ -171,7 +185,7 @@ input:hover {
 }
 
 
-button {
+.stats-button {
   padding: 10px 20px;
   font-size: 16px;
   background-color: #ff5b00;
@@ -183,11 +197,11 @@ button {
   width: 30%;
 }
 
-button:hover {
+.stats-button:hover {
   background-color: #ff7800;
 }
 
-. user-info {
+.user-info {
   position: relative;
   padding: 0 auto;
   color: white;
@@ -283,6 +297,21 @@ label{
   cursor: pointer;
   width: 16px;
   height: 16px;
+}
+
+.clear-button {
+  position: relative;
+  top: 10px;
+  right: 10px; /* Distance from the right edge of the parent */
+  margin-bottom: 30px;
+  height: 30px;
+  background-color: inherit;
+  width: 30px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
 }
 
 </style>
