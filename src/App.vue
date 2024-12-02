@@ -8,16 +8,16 @@
             width="25px"
             height="25px"
         />
-        <ul class="menu left-menu">
+        <ul class="menu left-menu" v-if="isAuthenticated">
           <li><router-link to="/stats">Stats</router-link></li>
           <li><router-link to="/compare">Compare</router-link></li>
           <li><router-link to="/pick">Pick map</router-link></li>
         </ul>
       </div>
 
-      <ul class="menu right-menu">
-        <li><router-link to="/profile">Sign in</router-link></li>
-        <li><router-link to="/settings">Sign up</router-link></li>
+      <ul class="menu right-menu" v-if="!isAuthenticated">
+        <li><router-link to="/login">Sign in</router-link></li>
+        <li><router-link to="/signup">Sign up</router-link></li>
       </ul>
     </div>
     </nav>
@@ -112,3 +112,20 @@ nav {
 }
 
 </style>
+
+<script>
+export default {
+  name: 'App',
+  computed: {
+      isAuthenticated() {
+        if(localStorage.getItem('token') === null) {
+          return false;
+        }else{
+           let date = JSON.parse(localStorage.getItem('token'))['expiration_date'];
+           console.log(date, Date.now());
+           return date > Date.now();
+        }
+      },
+    }
+}
+</script>
