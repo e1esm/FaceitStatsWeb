@@ -8,14 +8,14 @@
             width="25px"
             height="25px"
         />
-        <ul class="menu left-menu" v-if="isAuthenticated">
+        <ul class="menu left-menu" v-if="this.authStore.$state.isAuthenticated">
           <li><router-link to="/stats">Stats</router-link></li>
           <li><router-link to="/compare">Compare</router-link></li>
           <li><router-link to="/pick">Pick map</router-link></li>
         </ul>
       </div>
 
-      <ul class="menu right-menu" v-if="!isAuthenticated">
+      <ul class="menu right-menu" v-if="!this.authStore.$state.isAuthenticated">
         <li><router-link to="/login">Sign in</router-link></li>
         <li><router-link to="/signup">Sign up</router-link></li>
       </ul>
@@ -114,18 +114,13 @@ nav {
 </style>
 
 <script>
+import {useSharedStore} from "@/utils/store.js";
+
 export default {
   name: 'App',
-  computed: {
-      isAuthenticated() {
-        if(localStorage.getItem('token') === null) {
-          return false;
-        }else{
-           let date = JSON.parse(localStorage.getItem('token'))['expiration_date'];
-           console.log(date, Date.now());
-           return date > Date.now();
-        }
-      },
-    }
+  setup(){
+    const authStore = useSharedStore();
+    return {authStore};
+  },
 }
 </script>
