@@ -5,10 +5,13 @@ import Compare from '../components/Compare.vue';
 import Signup from "@/components/Signup.vue";
 import Login from "@/components/Login.vue";
 import {useSharedStore} from "@/utils/store.js";
+import Profile from "@/components/Profile.vue";
 
 const routes = [
+    {path: '/', name: 'Login', component: Login},
     {path: '/login', name: 'Login', component: Login},
     { path: '/signup', name: 'Signup', component: Signup },
+    {path: '/profile', name: 'Profile', component: Profile},
 { path: '/stats', name: 'Stat', component: Stat },
 { path: '/pick', name: 'Pick', component: Pick },
 { path: '/compare', name: 'Compare', component: Compare },
@@ -31,7 +34,7 @@ router.beforeEach((to, from, next) => {
         store.updateAuthState(true);
     }
 
-    console.log(store.isAuthenticated);
+
     if (to.path === '/') {
         if (store.isAuthenticated) {
             next('/stats');

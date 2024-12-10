@@ -19,6 +19,10 @@
         <li><router-link to="/login">Sign in</router-link></li>
         <li><router-link to="/signup">Sign up</router-link></li>
       </ul>
+
+      <ul class="menu right-menu" v-if="this.authStore.$state.isAuthenticated">
+        <li><router-link to="/profile">Profile</router-link></li>
+      </ul>
     </div>
     </nav>
     <router-view />
@@ -80,7 +84,7 @@ nav {
 .menu a {
   text-decoration: none;
   color: #b5b5b5;
-  font-size: 18px;
+  font-size: 20px;
   transition: color 0.3s ease, background-color 0.3s ease;
 }
 
@@ -98,11 +102,11 @@ nav {
   width: 100px;
   background-color: #ff5b00;
   border-radius: 5px;
-  padding-left: 10px;
 }
 
 .right-menu a {
   color: #ffffff;
+  text-align: center;
   border-radius: 5px;
 }
 

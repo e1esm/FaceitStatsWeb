@@ -10,3 +10,21 @@ export class User {
       this.cs2SkillLevel = cs2Game ? cs2Game.skill_level : 'Not available';
     }
   }
+
+export class PlatformUser{
+    constructor(data){
+        this.id = data.id;
+        this.username = data.username;
+        this.role = data.role;
+        this.faceitLink = data.faceit_link;
+    }
+
+
+    toJson(){
+        return {
+            username: this.username,
+            faceit_link: this.faceitLink,
+            role: this.role
+        };
+    }
+}
