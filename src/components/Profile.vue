@@ -14,7 +14,7 @@
             <button @click="selectView('users')" :class="{ active: currentView === 'users' }" class="menu-item" v-if="user.role==='ROLE_ADMIN'">Users</button>
           </li>
           <li>
-            <button @click="selectView('about')" :class="{ active: currentView === 'about' }" class="menu-item" v-if="user.role==='ROLE_ADMIN'">Reports</button>
+            <button @click="selectView('files')" :class="{ active: currentView === 'files' }" class="menu-item" v-if="user.role==='ROLE_ADMIN'">Reports</button>
           </li>
         </ul>
       </div>
@@ -107,6 +107,7 @@ import {getCurrentUser} from "@/services/auth.js";
 import {useSharedStore} from "@/utils/store.js";
 import TaskView from "@/components/Tasks.vue"
 import UserView from "@/components/Users.vue"
+import FileView from "@/components/Files.vue";
 
 export default {
   name: 'Profile',
@@ -125,7 +126,8 @@ export default {
 
   components: {
     users: UserView,
-    tasks: TaskView
+    tasks: TaskView,
+    files: FileView
   },
 
   created(){
