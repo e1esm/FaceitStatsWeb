@@ -302,7 +302,7 @@ label{
 .clear-button {
   position: relative;
   top: 10px;
-  right: 10px; /* Distance from the right edge of the parent */
+  right: 10px;
   margin-bottom: 30px;
   height: 30px;
   background-color: inherit;

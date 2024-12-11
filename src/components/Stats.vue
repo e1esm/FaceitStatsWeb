@@ -226,6 +226,10 @@ export default {
 
     async getUserBasicInfo(){
       try {
+        if(this.inputData.length === 0){
+          alert('No username was provided');
+          return;
+        }
         const nickname = this.inputData || '';
         this.user = await UserService.getUser(nickname);
         this.inputData = '';

@@ -20,8 +20,10 @@ export class PlatformUser{
     }
 
 
-    toJson(){
+    toJson(newPassword, oldPassword){
         return {
+            new_password: newPassword,
+            old_password: oldPassword,
             username: this.username,
             faceit_link: this.faceitLink,
             role: this.role

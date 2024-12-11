@@ -8,7 +8,7 @@
             <button @click="selectView('tasks')" :class="{ active: currentView === 'tasks' }" class="menu-item">Tasks</button>
           </li>
           <li>
-            <button @click="selectView('news')" :class="{ active: currentView === 'news' }" class="menu-item">Change credentials</button>
+            <button @click="selectView('credentials')" :class="{ active: currentView === 'credentials' }" class="menu-item">Credentials</button>
           </li>
           <li>
             <button @click="selectView('users')" :class="{ active: currentView === 'users' }" class="menu-item" v-if="user.role==='ROLE_ADMIN'">Users</button>
@@ -33,7 +33,7 @@
   flex-direction: row;
   width: 90%;
   height: 90%;
-  background-color: #191919;
+  background-color: inherit;
   left: 50%;
   margin-top: 10px;
   position: relative;
@@ -108,6 +108,7 @@ import {useSharedStore} from "@/utils/store.js";
 import TaskView from "@/components/Tasks.vue"
 import UserView from "@/components/Users.vue"
 import FileView from "@/components/Files.vue";
+import CredentialView from "@/components/Credentials.vue";
 
 export default {
   name: 'Profile',
@@ -127,7 +128,8 @@ export default {
   components: {
     users: UserView,
     tasks: TaskView,
-    files: FileView
+    files: FileView,
+    credentials: CredentialView
   },
 
   created(){

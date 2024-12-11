@@ -22,6 +22,7 @@
 
       <ul class="menu right-menu" v-if="this.authStore.$state.isAuthenticated">
         <li><router-link to="/profile">Profile</router-link></li>
+        <li><button @click="logout" class="logout-button">Log out</button></li>
       </ul>
     </div>
     </nav>
@@ -33,6 +34,20 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #232323;
+}
+
+.logout-button{
+  text-align: center;
+  width: 70%;
+  height: inherit;
+  background-color: inherit;
+  border: none;
+  font-size: 15px;
+  color: #ffffff;
+}
+
+.logout-button:hover {
+  background-color: #ff7800;
 }
 
 #app {
@@ -82,9 +97,10 @@ nav {
 }
 
 .menu a {
+  max-font-size: 20px;
   text-decoration: none;
   color: #b5b5b5;
-  font-size: 20px;
+  min-font-size: 15px;
   transition: color 0.3s ease, background-color 0.3s ease;
 }
 
@@ -102,6 +118,9 @@ nav {
   width: 100px;
   background-color: #ff5b00;
   border-radius: 5px;
+  text-align: center;
+  max-font-size: 20px;
+  min-font-size: 15px;
 }
 
 .right-menu a {
@@ -126,5 +145,13 @@ export default {
     const authStore = useSharedStore();
     return {authStore};
   },
+
+  methods: {
+    logout(){
+      this.authStore.updateAuthState(false);
+      localStorage.clear();
+      this.$router.push('/login');
+    }
+  }
 }
 </script>

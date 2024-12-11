@@ -35,6 +35,5 @@ export async function getCurrentUser(){
             }
         });
 
-    console.log(response);
     return new PlatformUser(response.data);
 }

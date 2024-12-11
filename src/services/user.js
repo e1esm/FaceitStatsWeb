@@ -41,8 +41,10 @@ export async function getPlatformUsers(){
     return response.data.map(data => new PlatformUser(data))
 }
 
-export async function updateUserRole(user){
-    const response = await axios.put(`http://localhost:8080/api/profile/users/${user.id}`, JSON.stringify(user.toJson()), {
+export async function updateUser(user, newPassword, oldPassword){
+    console.log(user);
+    console.log(JSON.stringify(user.toJson(newPassword, oldPassword)));
+    const response = await axios.put(`http://localhost:8080/api/profile/users/${user.id}`, JSON.stringify(user.toJson(newPassword, oldPassword)), {
         headers: {
             'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))['token']}`,
             'Content-Type': 'application/json',

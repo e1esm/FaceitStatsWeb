@@ -27,7 +27,7 @@
   </div>
 </template>
 <script>
-import {deleteUser, getPlatformUsers, updateUserRole} from "@/services/user.js";
+import {deleteUser, getPlatformUsers, updateUser} from "@/services/user.js";
 
   export default {
     name: "Users",
@@ -45,7 +45,6 @@ import {deleteUser, getPlatformUsers, updateUserRole} from "@/services/user.js";
         async getUsers(){
           try {
             this.users = await getPlatformUsers();
-            console.log(this.users);
           }catch (error) {
             console.log(error);
           }
@@ -67,7 +66,7 @@ import {deleteUser, getPlatformUsers, updateUserRole} from "@/services/user.js";
         async setNewRole(user){
             try{
               user.role = 'ROLE_ADMIN';
-              await updateUserRole(user);
+              await updateUser(user, '', '');
             }catch (error) {
               console.log(error);
             }
@@ -124,6 +123,7 @@ import {deleteUser, getPlatformUsers, updateUserRole} from "@/services/user.js";
   background-color: #1e1e1e;
   margin-top: 20px;
   border-radius: 10px;
+  overflow: scroll;
 }
 
 .user-entity{
