@@ -138,6 +138,7 @@ nav {
 
 <script>
 import {useSharedStore} from "@/utils/store.js";
+import {logout} from "@/services/auth.js";
 
 export default {
   name: 'App',
@@ -147,10 +148,11 @@ export default {
   },
 
   methods: {
-    logout(){
+    async logout(){
       this.authStore.updateAuthState(false);
+      await logout(localStorage.getItem('token'));
       localStorage.clear();
-      this.$router.push('/login');
+      await this.$router.push('/login');
     }
   }
 }

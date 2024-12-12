@@ -37,3 +37,20 @@ export async function getCurrentUser(){
 
     return new PlatformUser(response.data);
 }
+
+export async function logout(token){
+    const tokenObject = {
+        token: token
+    };
+    const response = await axios.post(`http://localhost:8080/api/auth/logout`, JSON.stringify(tokenObject), {
+        headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))['token']}`,
+            'Content-Type': 'application/json',
+        }
+    })
+        .catch(function(error){
+            if(error.response){
+                throw 'Error fetching user info: ' + error.response.status;
+            }
+        });
+}
