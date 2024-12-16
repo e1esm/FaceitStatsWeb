@@ -225,6 +225,7 @@ input{
   background-color: #222;
   border-radius: 10px;
   border: 1px solid #444;
+  color: white;
 }
 
 .match-button{

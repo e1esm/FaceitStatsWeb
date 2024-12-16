@@ -45,6 +45,11 @@ export default {
     this.getUserTask();
   },
 
+  beforeRouteLeave(to, from, next){
+    this.tasks = null;
+    next();
+  },
+
   methods: {
     async getUserTask() {
       try {

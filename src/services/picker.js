@@ -3,7 +3,6 @@ import {FactionBestMaps} from '@/models/Predictions.js';
 
 
 export async function getPredictions(matchLink){
-    /*
     const response = await axios.get(`http://localhost:8080/api/maps/pick?matchLink=${matchLink}`, {
         headers: {
             'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))['token']}`
@@ -19,9 +18,9 @@ export async function getPredictions(matchLink){
             }
         });
 
-     */
 
-    return new FactionBestMaps(jsonData);
+    console.log('doing research: ', response.status);
+    return new FactionBestMaps(response.data);
 }
 
 const jsonData = {

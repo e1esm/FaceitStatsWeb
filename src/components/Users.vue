@@ -56,6 +56,8 @@ import {deleteUser, getPlatformUsers, updateUser} from "@/services/user.js";
             return;
           }
 
+          this.users = this.users.filter(u => u.id !== user.id);
+
           await deleteUser(user);
         },
 
